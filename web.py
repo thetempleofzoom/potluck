@@ -16,18 +16,26 @@ def cleartext():
         print(claimant)
         sl.session_state['name']=""
 
-sl.title("Welcome to Wei's potluck!")
+sl.title("Welcome to potluck X!")
 
 sl.subheader("Items already claimed:")
 # add new list of items claimed and claimee
 with open('brung.pkl', 'rb') as fp:
     try:
         brung = pickle.load(fp)
+        print(brung[0])
         for item in brung:
-            sl.write(item[0] + " :red[bringing] " + item[1])
-    except EOFError:
+            tick = sl.checkbox(item[0] + " *bringing* " + item[1], key=item)
+            if tick:
+                brung.remove(item)
+                with open('brung.pkl', 'wb') as pf:
+                    pickle.dump(brung, pf)
+                del sl.session_state[item]
+                sl.experimental_rerun()
+    except IndexError or EOFError:
         sl.write(":red[No items claimed yet]")
         brung = []
+
 
 sl.subheader("Please enter new items to bring:")
 filepath = "tobrings.txt"
