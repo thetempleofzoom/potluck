@@ -22,6 +22,9 @@ sl.subheader("Chope things to bring:")
 claimant = ""
 claimant = sl.text_input("", placeholder='enter your name', key='name')
 
+filepath = "tobrings.txt"
+todos = defs.reading(filepath)
+
 for index, todo in enumerate(todos):
     checkbox = sl.checkbox(todo, key=index)
     if claimant and checkbox:
@@ -54,8 +57,6 @@ with open('brung.pkl', 'rb') as fp:
 
 
 sl.subheader("Or, please suggest additional items to bring:")
-filepath = "tobrings.txt"
-todos = defs.reading(filepath)
 
 sl.text_input("", placeholder="Enter a new potluck item",
               on_change=to_bring, key="new_todo")
