@@ -16,13 +16,12 @@ def cleartext():
 
 sl.title("Welcome to shabu potluck!")
 
-sl.subheader("Items already choped:")
-sl.subheader("(delete permanently by ticking item)")
+sl.subheader(":blue[Items already choped:]")
+#sl.subheader("(delete permanently by ticking item)")
 # add new list of items claimed and claimee
 with open('brung.pkl', 'rb') as fp:
-    try:
-        brung = pickle.load(fp)
-        print(brung[0])
+    brung = pickle.load(fp)
+    if brung:
         for item in brung:
             tick = sl.checkbox(item[0] + " *bringing* " + item[1], key=item)
             if tick:
@@ -31,11 +30,10 @@ with open('brung.pkl', 'rb') as fp:
                     pickle.dump(brung, pf)
                 del sl.session_state[item]
                 sl.experimental_rerun()
-    except IndexError or EOFError:
-        sl.write(":red[No items claimed yet]")
-        brung = []
+    else:
+        sl.markdown(":red[No items choped yet]")
 
-sl.subheader("Chope things to bring by entering name and ticking item:")
+sl.subheader(":green[Chope things to bring by entering name and choosing item:]")
 
 if 'claimant' not in sl.session_state:
     sl.session_state.claimant = ''
@@ -47,8 +45,10 @@ claimant = sl.session_state.claimant
 
 filepath = "tobrings.txt"
 todos = readwrite.reading(filepath)
-if len(todos)==1 and todos[0]=="\n":
-    todos=[]
+sl.markdown(":green[Items:]")
+
+if not todos:
+    sl.write(":red[No items - pls suggest some below]")
 else:
     for index, todo in enumerate(todos):
         checkbox = sl.checkbox(todo, key=index)
@@ -60,8 +60,6 @@ else:
             todos.pop(index)
             readwrite.writing(todos, filepath)
             del sl.session_state[index]
-            #can't delete name in input text field??
-            del sl.session_state.name
             sl.experimental_rerun()
 
 
