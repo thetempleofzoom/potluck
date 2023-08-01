@@ -45,7 +45,7 @@ todos = readwrite.reading(filepath)
 print(len(todos))
 
 for index, todo in enumerate(todos):
-    if len(todos)==0:
+    if len(todos)==1 and todos[0]=="\n":
         pass
     else:
         checkbox = sl.checkbox(todo, key=index)
