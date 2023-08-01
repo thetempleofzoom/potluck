@@ -16,9 +16,25 @@ def cleartext():
         print(claimant)
         sl.session_state['name']=""
 
-sl.title("Welcome to potluck X!")
+sl.title("Welcome to shabu potluck!")
 
-sl.subheader("Items already claimed:")
+sl.subheader("Chope things to bring:")
+claimant = ""
+claimant = sl.text_input("", placeholder='enter your name', key='name')
+
+for index, todo in enumerate(todos):
+    checkbox = sl.checkbox(todo, key=index)
+    if claimant and checkbox:
+        with open("brung.pkl", 'wb') as fp:
+            brung.append((claimant, todos[index]))
+            pickle.dump(brung, fp)
+        # delete item from list
+        todos.pop(index)
+        defs.writing(todos, filepath)
+        del sl.session_state[index]
+        sl.experimental_rerun()
+
+sl.subheader("Items already choped:")
 # add new list of items claimed and claimee
 with open('brung.pkl', 'rb') as fp:
     try:
@@ -37,28 +53,13 @@ with open('brung.pkl', 'rb') as fp:
         brung = []
 
 
-sl.subheader("Please enter new items to bring:")
+sl.subheader("Or, please suggest additional items to bring:")
 filepath = "tobrings.txt"
 todos = defs.reading(filepath)
 
 sl.text_input("", placeholder="Enter a new potluck item",
               on_change=to_bring, key="new_todo")
 
-sl.subheader("Or, claim items to bring:")
-claimant = ""
-claimant = sl.text_input("", placeholder='enter your name', key='name')
-
-for index, todo in enumerate(todos):
-    checkbox = sl.checkbox(todo, key=index)
-    if claimant and checkbox:
-        with open("brung.pkl", 'wb') as fp:
-            brung.append((claimant, todos[index]))
-            pickle.dump(brung, fp)
-        # delete item from list
-        todos.pop(index)
-        defs.writing(todos, filepath)
-        del sl.session_state[index]
-        sl.experimental_rerun()
 
 
 
