@@ -33,7 +33,7 @@ with open('brung.pkl', 'rb') as fp:
     else:
         sl.markdown(":red[No items choped yet]")
 
-sl.subheader(":green[Chope things to bring by entering name and choosing item:]")
+sl.subheader(":green[Chope things to bring:]")
 
 if 'claimant' not in sl.session_state:
     sl.session_state.claimant = ''
@@ -63,7 +63,7 @@ else:
             sl.experimental_rerun()
 
 
-sl.subheader("Or, please suggest additional items to bring:")
+sl.subheader("Or, please put additional items on the list:")
 
 sl.text_input("x", placeholder="Enter a new potluck item",
               on_change=to_bring, key="new_todo" ,label_visibility='collapsed')
