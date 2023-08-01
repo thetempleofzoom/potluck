@@ -10,8 +10,6 @@ def to_bring():
         sl.session_state["new_todo"] = ""
 
 def cleartext():
-    if 'claimant' not in sl.session_state:
-        sl.session_state.claimant = ''
     sl.session_state.claimant = sl.session_state.name
     sl.session_state.name = ""
 
@@ -38,6 +36,9 @@ with open('brung.pkl', 'rb') as fp:
         brung = []
 
 sl.subheader("Chope things to bring by entering name and ticking item:")
+
+if 'claimant' not in sl.session_state:
+    sl.session_state.claimant = ''
 
 sl.text_input("x", placeholder='enter your name', value='',
                          on_change=cleartext, key='name', label_visibility='collapsed')
