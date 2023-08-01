@@ -18,6 +18,24 @@ def cleartext():
 
 sl.title("Welcome to shabu potluck!")
 
+sl.subheader("Items already choped:")
+# add new list of items claimed and claimee
+with open('brung.pkl', 'rb') as fp:
+    try:
+        brung = pickle.load(fp)
+        print(brung[0])
+        for item in brung:
+            tick = sl.checkbox(item[0] + " *bringing* " + item[1], key=item)
+            if tick:
+                brung.remove(item)
+                with open('brung.pkl', 'wb') as pf:
+                    pickle.dump(brung, pf)
+                del sl.session_state[item]
+                sl.experimental_rerun()
+    except IndexError or EOFError:
+        sl.write(":red[No items claimed yet]")
+        brung = []
+
 sl.subheader("Chope things to bring:")
 claimant = ""
 claimant = sl.text_input("", placeholder='enter your name', key='name')
@@ -36,24 +54,6 @@ for index, todo in enumerate(todos):
         defs.writing(todos, filepath)
         del sl.session_state[index]
         sl.experimental_rerun()
-
-sl.subheader("Items already choped:")
-# add new list of items claimed and claimee
-with open('brung.pkl', 'rb') as fp:
-    try:
-        brung = pickle.load(fp)
-        print(brung[0])
-        for item in brung:
-            tick = sl.checkbox(item[0] + " *bringing* " + item[1], key=item)
-            if tick:
-                brung.remove(item)
-                with open('brung.pkl', 'wb') as pf:
-                    pickle.dump(brung, pf)
-                del sl.session_state[item]
-                sl.experimental_rerun()
-    except IndexError or EOFError:
-        sl.write(":red[No items claimed yet]")
-        brung = []
 
 
 sl.subheader("Or, please suggest additional items to bring:")
