@@ -10,15 +10,16 @@ def to_bring():
         sl.session_state["new_todo"] = ""
 
 def cleartext():
-    #global claimant
-    if sl.session_state['name']:
-        claimant = sl.session_state['name']
-        print(claimant)
-        sl.session_state['name']=""
+    if 'claimant' not in sl.session_state:
+        sl.session_state.claimant = ''
+    sl.session_state.claimant = sl.session_state.name
+    sl.session_state.name = ""
+
 
 sl.title("Welcome to shabu potluck!")
 
 sl.subheader("Items already choped:")
+sl.subheader("(delete permanently by ticking item)")
 # add new list of items claimed and claimee
 with open('brung.pkl', 'rb') as fp:
     try:
@@ -36,34 +37,37 @@ with open('brung.pkl', 'rb') as fp:
         sl.write(":red[No items claimed yet]")
         brung = []
 
-sl.subheader("Chope things to bring:")
-claimant = ""
-claimant = sl.text_input("", placeholder='enter your name', key='name')
+sl.subheader("Chope things to bring by entering name and ticking item:")
+
+sl.text_input("x", placeholder='enter your name', value='',
+                         on_change=cleartext, key='name', label_visibility='collapsed')
+
+claimant = sl.session_state.claimant
 
 filepath = "tobrings.txt"
 todos = readwrite.reading(filepath)
-print(len(todos))
-
-for index, todo in enumerate(todos):
-    if len(todos)==1 and todos[0]=="\n":
-        pass
-    else:
+if len(todos)==1 and todos[0]=="\n":
+    todos=[]
+else:
+    for index, todo in enumerate(todos):
         checkbox = sl.checkbox(todo, key=index)
-    if claimant and checkbox:
-        with open("brung.pkl", 'wb') as fp:
-            brung.append((claimant, todos[index]))
-            pickle.dump(brung, fp)
-        # delete item from list
-        todos.pop(index)
-        readwrite.writing(todos, filepath)
-        del sl.session_state[index]
-        sl.experimental_rerun()
+        if claimant and checkbox:
+            with open("brung.pkl", 'wb') as fp:
+                brung.append((claimant, todos[index]))
+                pickle.dump(brung, fp)
+            # delete item from list
+            todos.pop(index)
+            readwrite.writing(todos, filepath)
+            del sl.session_state[index]
+            #can't delete name in input text field??
+            del sl.session_state.name
+            sl.experimental_rerun()
 
 
 sl.subheader("Or, please suggest additional items to bring:")
 
-sl.text_input("", placeholder="Enter a new potluck item",
-              on_change=to_bring, key="new_todo")
+sl.text_input("x", placeholder="Enter a new potluck item",
+              on_change=to_bring, key="new_todo" ,label_visibility='collapsed')
 
 
 
