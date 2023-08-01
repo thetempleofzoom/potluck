@@ -1,5 +1,5 @@
 import streamlit as sl
-import defs
+import readwrite
 import pickle
 
 def to_bring():
@@ -41,17 +41,21 @@ claimant = ""
 claimant = sl.text_input("", placeholder='enter your name', key='name')
 
 filepath = "tobrings.txt"
-todos = defs.reading(filepath)
+todos = readwrite.reading(filepath)
+print(len(todos))
 
 for index, todo in enumerate(todos):
-    checkbox = sl.checkbox(todo, key=index)
+    if len(todos)==0:
+        pass
+    else:
+        checkbox = sl.checkbox(todo, key=index)
     if claimant and checkbox:
         with open("brung.pkl", 'wb') as fp:
             brung.append((claimant, todos[index]))
             pickle.dump(brung, fp)
         # delete item from list
         todos.pop(index)
-        defs.writing(todos, filepath)
+        readwrite.writing(todos, filepath)
         del sl.session_state[index]
         sl.experimental_rerun()
 

@@ -1,4 +1,4 @@
-import streamlit as sl
+import streamlit as slpip
 #fp = "tobrings.txt"
 
 def reading(filepath):
